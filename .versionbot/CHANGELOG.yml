@@ -1,4 +1,16 @@
 - commits:
+    - subject: Wait dnsmasq to exit when killing
+      hash: 94371e9a516c5691ccc111581ed10c7b0e4cbe02
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+  version: 4.4.4
+  date: 2020-10-28T17:27:39.821Z
+- commits:
     - subject: Revert "Run cargo fmt"
       hash: 02594e248a0b5122e91b2244cc2e96b49cef6c9c
       body: |
