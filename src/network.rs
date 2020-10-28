@@ -6,6 +6,9 @@ use std::error::Error;
 use std::net::Ipv4Addr;
 use std::collections::HashSet;
 
+use nix::sys::signal::{kill, SIGTERM};
+use nix::unistd::Pid;
+
 use network_manager::{AccessPoint, AccessPointCredentials, Connection, ConnectionState,
                       Connectivity, Device, DeviceState, DeviceType, NetworkManager, Security,
                       ServiceState};
@@ -193,7 +196,9 @@ impl NetworkCommandHandler {
     }
 
     fn stop(&mut self, exit_tx: &Sender<ExitResult>, result: ExitResult) {
-        let _ = self.dnsmasq.kill();
+        //let _ = self.dnsmasq.kill();
+        let id = self.dnsmasq.id();
+        let _ = kill(Pid::from_raw(id as _), SIGTERM);
 
         let _ = self.dnsmasq.wait();
 
