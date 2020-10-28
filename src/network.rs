@@ -6,9 +6,6 @@ use std::error::Error;
 use std::net::Ipv4Addr;
 use std::collections::HashSet;
 
-use nix::sys::signal::{kill, SIGTERM};
-use nix::unistd::Pid;
-
 use network_manager::{AccessPoint, AccessPointCredentials, Connection, ConnectionState,
                       Connectivity, Device, DeviceState, DeviceType, NetworkManager, Security,
                       ServiceState};
@@ -16,7 +13,7 @@ use network_manager::{AccessPoint, AccessPointCredentials, Connection, Connectio
 use errors::*;
 use exit::{exit, trap_exit_signals, ExitResult};
 use config::Config;
-use dnsmasq::start_dnsmasq;
+use dnsmasq::{start_dnsmasq, stop_dnsmasq};
 use server::start_server;
 
 pub enum NetworkCommand {
@@ -196,11 +193,7 @@ impl NetworkCommandHandler {
     }
 
     fn stop(&mut self, exit_tx: &Sender<ExitResult>, result: ExitResult) {
-        //let _ = self.dnsmasq.kill();
-        let id = self.dnsmasq.id();
-        let _ = kill(Pid::from_raw(id as _), SIGTERM);
-
-        let _ = self.dnsmasq.wait();
+        let _ = stop_dnsmasq(&mut self.dnsmasq);
 
         if let Some(ref connection) = self.portal_connection {
             let _ = stop_portal_impl(connection, &self.config);
